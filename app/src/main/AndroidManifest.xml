@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.user.fueldriver">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+
+    <application
+        android:name=".Bean"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".Login" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/fj" />
+
+        <activity android:name=".Forgot" />
+        <activity android:name=".SignUp" />
+        <activity android:name=".Dashboard" />
+        <activity android:name=".AccountSummary" />
+        <activity android:name=".OrderHistory2" />
+        <activity android:name=".OtpVerification" />
+        <activity android:name=".Address" />
+        <activity android:name=".VehicleDocuments" />
+        <activity android:name=".LegalInformation" />
+        <activity android:name=".Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".PersonalDocument" />
+        <activity android:name=".KVC" />
+        <activity android:name=".CompleteKYC"></activity>
+    </application>
+
+</manifest>

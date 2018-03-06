@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.user.fueldriver.KVC">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.Toolbar>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:text="Complete Your KYC" />
+
+        </RelativeLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="To Complete Your KYC wo need to verify Originals opf any ONE of following"/>
+
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radio"
+
+                    >
+                    <RadioButton
+
+                        android:textSize="15dp"
+                        android:layout_width="wrap_content"
+                        android:textColor="#000000"
+                        android:padding="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_height="wrap_content"
+                        android:text="Passport Number"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="84dp"/>
+                    <RadioButton
+
+                        android:textSize="15dp"
+                        android:padding="10dp"
+                        android:layout_width="wrap_content"
+                        android:textColor="#000000"
+                        android:layout_marginLeft="20dp"
+                        android:layout_height="wrap_content"
+                        android:text="Passport Number"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="84dp"/>
+                    <RadioButton
+
+                        android:textSize="15dp"
+                        android:layout_width="wrap_content"
+                        android:textColor="#000000"
+                        android:padding="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_height="wrap_content"
+                        android:text="Passport Number"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="84dp"/>
+                    <RadioButton
+
+                        android:textSize="15dp"
+                        android:layout_width="wrap_content"
+                        android:textColor="#000000"
+                        android:padding="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_height="wrap_content"
+                        android:text="Passport Number"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="84dp"/>
+
+
+                </RadioGroup>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="13sp"
+                    android:background="@drawable/cdcdcd_stroke"
+                    android:hint="Passport Number"
+                    android:padding="10dp" />
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="13dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/cdcdcd_stroke"
+                    android:hint="Full Name(As per Passport)"
+                    android:padding="10dp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="13dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/cdcdcd_stroke"
+                    android:hint="Expiry Date"
+                    android:padding="10dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="I Agree to "/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="tems and c"
+                        android:textColor="@color/colorPrimaryDark"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="and"
+                        />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Privacy Policy."
+                        android:textColor="@color/colorPrimaryDark"/>
+
+
+                </LinearLayout>
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#fff"
+                    android:text="Proceed"
+                    android:id="@+id/proceed"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/red_background"/>
+
+
+
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>
