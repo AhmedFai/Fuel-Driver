@@ -14,7 +14,7 @@ public class Bean extends Application {
     public String password = "";
     public String notificationId = "";
     public String image = "";
-    public String otp = "";
+    public String dayId = "";
     public String name = "";
     public String latitude = "";
     public String longitude = "";

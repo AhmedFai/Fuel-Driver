@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         pref = getApplication().getSharedPreferences("pref", MODE_PRIVATE);
         edit = pref.edit();
 
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                         ft.commit();
 
-                        toolbar.setTitle("Profile");
+                       // toolbar.setTitle("Profile");
 
                         return true;
                     case 1:
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         ft2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                         ft2.commit();
 
-                        toolbar.setTitle("Account");
+                        //toolbar.setTitle("Account");
 
                         return true;
                     case 2:
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                         ft1.commit();
 
-                        toolbar.setTitle("Duty");
+                        //toolbar.setTitle("Duty");
 
                         return true;
                     case 3:
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                         ft3.commit();
 
 
-                        toolbar.setTitle("Order History");
+                      //  toolbar.setTitle("Order History");
                         return true;
                     case 4:
 
@@ -186,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         ft1.commit();
 
-        toolbar.setTitle("Duty");
+       // toolbar.setTitle("Duty");
 
     }
 }

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -23,13 +24,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.fueldriver.AcceptDenyPOJO.AcceptDenyBean;
+import com.example.user.fueldriver.BookingStatusPOJO.BookingStatusBean;
+import com.example.user.fueldriver.FinishRidePOJO.FinishRideBean;
+import com.example.user.fueldriver.GoogleMapPOJO.DirectionFinder;
+import com.example.user.fueldriver.GoogleMapPOJO.DirectionFinderListener;
+import com.example.user.fueldriver.GoogleMapPOJO.Route;
 import com.example.user.fueldriver.NotificationPOJO.notificationBean;
+import com.example.user.fueldriver.RideStatusPOJO.DriverStatusBean;
 import com.example.user.fueldriver.UpdateStatusPOJO.UpdateStatusBean;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.maps.CameraUpdate;
@@ -41,11 +50,19 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -64,7 +81,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * Created by USER on 01-02-2018.
  */
 
-public class Duty extends Fragment implements View.OnClickListener {
+public class Duty extends Fragment implements View.OnClickListener , DirectionFinderListener{
 
     SupportMapFragment mSupportMapFragment;
     LinearLayout offDuty, onDuty;
@@ -74,8 +91,24 @@ public class Duty extends Fragment implements View.OnClickListener {
     SharedPreferences.Editor edit;
     CardView notiBox;
     Timer timer;
-    TextView notiName, pickupLocation;
+    TextView notiName, pickupLocation, confirm, cancle, price, quantity, type;
     String notiId = " ";
+    String currentlat, currentLng;
+
+    String pickUpLat = "";
+    String pickUpLng = "";
+
+    String dropLat = "";
+    String dropLng = "";
+    LatLngBounds.Builder builder;
+    LatLngBounds bounds;
+    GoogleMap map;
+    Button finish;
+
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+
 
 
     @Nullable
@@ -96,6 +129,171 @@ public class Duty extends Fragment implements View.OnClickListener {
         onDuty.setOnClickListener(this);
         notiName = (TextView) view.findViewById(R.id.name);
         profile = (ImageView) view.findViewById(R.id.userPic);
+        confirm = (TextView)view.findViewById(R.id.cnfrm);
+        cancle = (TextView)view.findViewById(R.id.cncl);
+        price = (TextView)view.findViewById(R.id.price);
+        quantity = (TextView)view.findViewById(R.id.quantity);
+        type = (TextView)view.findViewById(R.id.type);
+        finish = (Button)view.findViewById(R.id.finish);
+
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bar.setVisibility(View.VISIBLE);
+                String id = pref.getString("driverId", "");
+                final Bean b = (Bean) getContext().getApplicationContext();
+
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(b.baseURL)
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                Allapi cr = retrofit.create(Allapi.class);
+                Call<FinishRideBean> call = cr.finishRide(id,notiId,currentlat,currentLng);
+                call.enqueue(new Callback<FinishRideBean>() {
+                    @Override
+                    public void onResponse(Call<FinishRideBean> call, Response<FinishRideBean> response) {
+                        if (Objects.equals(response.body().getStatus(),"1")){
+                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            bar.setVisibility(View.GONE);
+                            finish.setVisibility(View.GONE);
+                            map.clear();
+                            doSomethingRepeatedly();
+
+
+                            EasyLocationMod easyLocationMod = new EasyLocationMod(getContext());
+
+                            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            }
+                            double[] l = easyLocationMod.getLatLong();
+                            String lat = String.valueOf(l[0]);
+                            String lon = String.valueOf(l[1]);
+                            LatLng myLocation = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+                            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                            try {
+                                List<Address> listAdresses = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(lon), 1);
+                                if (null != listAdresses && listAdresses.size() > 0) {
+                                    String address = listAdresses.get(0).getAddressLine(0);
+                                    String state = listAdresses.get(0).getAdminArea();
+                                    String country = listAdresses.get(0).getCountryName();
+                                    String subLocality = listAdresses.get(0).getSubLocality();
+
+                                    originMarkers.add(map.addMarker(new MarkerOptions()
+                                            .position(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon)))
+                                            .title("" + subLocality + ", " + state + ", " + country + "")
+                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.pin))));
+
+
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.d("lat", lat);
+                            Log.d("lon", lon);
+
+                            map.setMyLocationEnabled(false);
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(myLocation).zoom(15.0f).build();
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                            map.moveCamera(cameraUpdate);
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FinishRideBean> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                timer.cancel();
+                call.cancel();
+                String id = pref.getString("driverId", "");
+                bar.setVisibility(View.VISIBLE);
+                final Bean b = (Bean) getContext().getApplicationContext();
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(b.baseURL)
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                Allapi cr = retrofit.create(Allapi.class);
+                Call<AcceptDenyBean> call = cr.accept(id, notiId, "1");
+                call.enqueue(new Callback<AcceptDenyBean>() {
+                    @Override
+                    public void onResponse(Call<AcceptDenyBean> call, Response<AcceptDenyBean> response) {
+
+                        Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        notiBox.setVisibility(View.GONE);
+                        finish.setVisibility(View.VISIBLE);
+
+                        bar.setVisibility(View.GONE);
+
+                        statusForRide();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<AcceptDenyBean> call, Throwable t) {
+
+                        bar.setVisibility(View.GONE);
+
+                    }
+                });
+
+            }
+        });
+
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String id = pref.getString("driverId", "");
+
+
+                bar.setVisibility(View.VISIBLE);
+                final Bean b = (Bean) getContext().getApplicationContext();
+
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(b.baseURL)
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                Allapi cr = retrofit.create(Allapi.class);
+                Call<AcceptDenyBean> callden = cr.accept(id, notiId, "2");
+                callden.enqueue(new Callback<AcceptDenyBean>() {
+                    @Override
+                    public void onResponse(Call<AcceptDenyBean> call, Response<AcceptDenyBean> response) {
+                        Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        notiBox.setVisibility(View.GONE);
+                        bar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<AcceptDenyBean> call, Throwable t) {
+                        bar.setVisibility(View.GONE);
+
+                    }
+                });
+
+            }
+        });
 
 
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.bookRideFragment);
@@ -112,7 +310,9 @@ public class Duty extends Fragment implements View.OnClickListener {
                 public void onMapReady(final GoogleMap googleMap) {
                     if (googleMap != null) {
 
-                        googleMap.getUiSettings().setAllGesturesEnabled(true);
+                        map = googleMap;
+
+                        map.getUiSettings().setAllGesturesEnabled(true);
 
                         EasyLocationMod easyLocationMod = new EasyLocationMod(getContext());
 
@@ -141,19 +341,19 @@ public class Duty extends Fragment implements View.OnClickListener {
                                 String country = listAdresses.get(0).getCountryName();
                                 String subLocality = listAdresses.get(0).getSubLocality();
 
-                                googleMap.addMarker(new MarkerOptions()
+                                originMarkers.add(map.addMarker(new MarkerOptions()
                                         .position(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon)))
                                         .title("" + subLocality + ", " + state + ", " + country + "")
-                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.pin)));
+                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.pin))));
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
 
-                        googleMap.setMyLocationEnabled(false);
+                        map.setMyLocationEnabled(false);
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(myLocation).zoom(15.0f).build();
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-                        googleMap.moveCamera(cameraUpdate);
+                        map.moveCamera(cameraUpdate);
 
 
                     }
@@ -212,7 +412,7 @@ public class Duty extends Fragment implements View.OnClickListener {
                     @Override
                     public void onResponse(Call<UpdateStatusBean> call, Response<UpdateStatusBean> response) {
                         if (Objects.equals(response.body().getStatus(), "1")) {
-                            Toast.makeText(getContext(), "You duty is off", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Your duty is off", Toast.LENGTH_SHORT).show();
                             bar.setVisibility(View.GONE);
 
                         } else {
@@ -338,6 +538,10 @@ public class Duty extends Fragment implements View.OnClickListener {
 
                                                     notiName.setText(response.body().getData().get(0).getUserName());
 
+                                                    price.setText(" Rs. " + response.body().getData().get(0).getPrice());
+                                                    quantity.setText(response.body().getData().get(0).getQuantity() + "L ");
+                                                    type.setText(response.body().getData().get(0).getFuelTypeName());
+
 
                                                     DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
                                                             .cacheOnDisk(true).resetViewBeforeLoading(true).build();
@@ -414,5 +618,229 @@ public class Duty extends Fragment implements View.OnClickListener {
 
     }
 
+    public void statusForRide(){
+        EasyLocationMod easyLocationMod = new EasyLocationMod(getContext());
 
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        double[] l = easyLocationMod.getLatLong();
+        currentlat = String.valueOf(l[0]);
+        currentLng = String.valueOf(l[1]);
+        String id = pref.getString("driverId", "");
+
+
+        final Bean b = (Bean) getContext().getApplicationContext();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(b.baseURL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        Allapi cr = retrofit.create(Allapi.class);
+
+        Call<DriverStatusBean> callRide = cr.driver(id, notiId, currentlat, currentLng);
+        callRide.enqueue(new Callback<DriverStatusBean>() {
+            @Override
+            public void onResponse(Call<DriverStatusBean> call, Response<DriverStatusBean> response) {
+
+                if (Objects.equals(response.body().getStatus(), "1")) {
+                    pickUpLat = response.body().getData().getPickUpLatitude();
+                    pickUpLng = response.body().getData().getPickUpLongitude();
+                    dropLat = response.body().getData().getDropLatitude();
+                    dropLng = response.body().getData().getDropLongitude();
+                    Log.d("pickup wale Lat", response.body().getData().getPickUpLatitude());
+                    Log.d("pickup wale lng", response.body().getData().getPickUpLongitude());
+                    Log.d("drop wale lat", response.body().getData().getDropLatitude());
+                    Log.d("drop wale lng", response.body().getData().getDropLongitude());
+                    Log.d("dfsdsfgsgsfsgsdgd", response.body().getData().getUserName());
+
+                   /* origin = new LatLng(Double.parseDouble(pickLat), Double.parseDouble(pickLon));
+                    destination = new LatLng(Double.parseDouble(dropLat), Double.parseDouble(dropLon));*/
+
+                    sendRequest();
+
+                }
+
+                builder = new LatLngBounds.Builder();
+            }
+
+            @Override
+            public void onFailure(Call<DriverStatusBean> call, Throwable t) {
+
+
+                Log.d("dfsgsgsdgsdgsgsdgssssd", t.toString());
+
+            }
+        });
+
+    }
+
+
+    private void sendRequest() {
+
+        Log.d("send request", "hit");
+
+        if (currentLng.length() > 0 && currentLng.length() > 0) {
+
+            Log.d("log ke under", "yahi hai");
+
+            try {
+                new DirectionFinder(this, currentlat, currentLng, dropLat, dropLng).execute();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+    @Override
+    public void onDirectionFinderStart() {
+        if (originMarkers != null) {
+            for (Marker marker : originMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (destinationMarkers != null) {
+            for (Marker marker : destinationMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (polylinePaths != null) {
+            for (Polyline polyline : polylinePaths) {
+                polyline.remove();
+            }
+        }
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+        Log.d("success method", "sucssdced");
+
+        // progressDialog.dismiss();
+        polylinePaths = new ArrayList<>();
+        originMarkers = new ArrayList<>();
+        destinationMarkers = new ArrayList<>();
+
+        map.clear();
+        builder = new LatLngBounds.Builder();
+
+        for (Route route : routes) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+           // time.setText(route.duration.text);
+          //  value.setText(route.distance.text);
+
+            Log.d("duration", route.duration.text);
+            Log.d("distance", route.distance.text);
+
+            Marker marker1 = map.addMarker(new MarkerOptions()
+                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.pin))
+                    .title(route.startAddress)
+                    .position(route.startLocation));
+
+            originMarkers.add(marker1);
+            marker1.showInfoWindow();
+            builder.include(marker1.getPosition());
+
+            Marker marker2 = map.addMarker(new MarkerOptions()
+                    // .icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
+                    .title(route.endAddress)
+                    .position(route.endLocation));
+            destinationMarkers.add(marker2);
+            marker2.showInfoWindow();
+
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLACK).
+                    width(10);
+
+            for (int i = 0; i < route.points.size(); i++) {
+                polylineOptions.add(route.points.get(i));
+                builder.include(route.points.get(i));
+            }
+
+            polylinePaths.add(map.addPolyline(polylineOptions));
+        }
+
+        bounds = builder.build();
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+
+
+        map.animateCamera(cu);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        bookingStatus();
+
+
+
+    }
+
+    public void bookingStatus(){
+        String id = pref.getString("driverId", "");
+
+
+        final Bean b = (Bean) getContext().getApplicationContext();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(b.baseURL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        Allapi cr = retrofit.create(Allapi.class);
+        Call<BookingStatusBean> call = cr.booking(id);
+        call.enqueue(new Callback<BookingStatusBean>() {
+            @Override
+            public void onResponse(Call<BookingStatusBean> call, Response<BookingStatusBean> response) {
+                if (Objects.equals(response.body().getStatus(),"1")){
+
+                    if (Objects.equals(response.body().getData().getDutyStatusCode(), "1")) {
+
+                        Toast.makeText(getContext(), "You are on duty", Toast.LENGTH_SHORT).show();
+                        offImage.setBackgroundResource(R.drawable.back_circle);
+                        onImage.setBackgroundResource(R.drawable.redcircle);
+                        doSomethingRepeatedly();
+                        Log.d("dutywala", response.body().getData().getBookingId());
+
+
+                    } else {
+
+                        Toast.makeText(getContext(), "Your duty is off", Toast.LENGTH_SHORT).show();
+                        offImage.setBackgroundResource(R.drawable.redcircle);
+                        onImage.setBackgroundResource(R.drawable.back_circle);
+
+
+                    }
+
+                }else {
+                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    bar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BookingStatusBean> call, Throwable t) {
+                bar.setVisibility(View.GONE);
+
+            }
+        });
+    }
 }

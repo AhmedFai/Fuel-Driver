@@ -12,8 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.user.fueldriver.EarnListPOJO.Datum;
+import com.example.user.fueldriver.EarnListPOJO.EarnListBean;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by USER on 01-02-2018.
@@ -26,7 +37,9 @@ public class Accounts extends Fragment {
 
     AccountAdapter adapter;
 
-    List<ItemObject>itemObjects;
+
+    List<Datum> list;
+    ConnectionDetector cd;
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
@@ -40,13 +53,42 @@ public class Accounts extends Fragment {
 
         grid = view.findViewById(R.id.grid);
         manager = new GridLayoutManager(getContext(), 1);
+        cd = new ConnectionDetector(getContext());
 
 
-        itemObjects = new ArrayList<>();
-        adapter = new AccountAdapter(getContext());
+        list = new ArrayList<>();
+        adapter = new AccountAdapter(getContext(),list);
         grid.setLayoutManager(manager);
         grid.setAdapter(adapter);
 
+        if (cd.isConnectingToInternet()){
+            final Bean b = (Bean) getContext().getApplicationContext();
+
+            Retrofit retrofit2 = new Retrofit.Builder()
+                    .baseUrl(b.baseURL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            Allapi cr = retrofit2.create(Allapi.class);
+            Call<EarnListBean> call = cr.earnList(b.driverId);
+            call.enqueue(new Callback<EarnListBean>() {
+                @Override
+                public void onResponse(Call<EarnListBean> call, Response<EarnListBean> response) {
+
+                    if (Objects.equals(response.body().getStatus(),"1")){
+
+                        b.dayId = response.body().getData().get(0).getDayId();
+                        adapter.setGridData(response.body().getData());
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<EarnListBean> call, Throwable t) {
+
+                }
+            });
+        }
 
         return view;
 

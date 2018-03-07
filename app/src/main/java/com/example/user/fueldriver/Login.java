@@ -83,6 +83,7 @@ public class Login extends AppCompatActivity {
                                         b.phone = "";
                                         b.password = "";
                                         b.driverId = response.body().getData().getDriverId();
+                                        b.driverId = response.body().getData().getDriverId();
                                         Log.d("driver Name", response.body().getData().getDrivername());
 
 

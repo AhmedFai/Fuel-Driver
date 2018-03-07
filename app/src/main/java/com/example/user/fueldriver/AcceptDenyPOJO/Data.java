@@ -1,20 +1,17 @@
-package com.example.user.fueldriver.NotificationPOJO;
+package com.example.user.fueldriver.AcceptDenyPOJO;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by faizan on 3/6/2018.
+ * Created by faizan on 3/7/2018.
  */
 
-public class Datum {
+public class Data {
 
     @SerializedName("userName")
     @Expose
     private String userName;
-    @SerializedName("picture")
-    @Expose
-    private String picture;
     @SerializedName("driverId")
     @Expose
     private String driverId;
@@ -33,18 +30,6 @@ public class Datum {
     @SerializedName("dropLongitude")
     @Expose
     private String dropLongitude;
-    @SerializedName("vehicleNumber")
-    @Expose
-    private String vehicleNumber;
-    @SerializedName("price")
-    @Expose
-    private String price;
-    @SerializedName("quantity")
-    @Expose
-    private String quantity;
-    @SerializedName("fuelTypeName")
-    @Expose
-    private String fuelTypeName;
 
     public String getUserName() {
         return userName;
@@ -52,14 +37,6 @@ public class Datum {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
     }
 
     public String getDriverId() {
@@ -110,36 +87,5 @@ public class Datum {
         this.dropLongitude = dropLongitude;
     }
 
-    public String getVehicleNumber() {
-        return vehicleNumber;
-    }
-
-    public void setVehicleNumber(String vehicleNumber) {
-        this.vehicleNumber = vehicleNumber;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getFuelTypeName() {
-        return fuelTypeName;
-    }
-
-    public void setFuelTypeName(String fuelTypeName) {
-        this.fuelTypeName = fuelTypeName;
-    }
 
 }

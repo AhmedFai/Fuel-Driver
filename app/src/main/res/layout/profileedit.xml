@@ -28,12 +28,12 @@
 
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="50dp"
-                    android:src="@drawable/ggg"
                     tools:layout_editor_absoluteX="100dp"
                     tools:layout_editor_absoluteY="292dp" />
 
@@ -41,30 +41,30 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="User Name"
                 android:textColor="#000"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="+91 9632587410"
                 android:textColor="#5b5a5a"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="UP77854691236"
                 android:textColor="#5b5a5a"
                 android:textStyle="bold" />
 
@@ -366,6 +366,14 @@
 
 
         </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
 
 
     </RelativeLayout>

@@ -1,271 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:weightSum="2">
 
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:cardUseCompatPadding="true">
+            android:layout_weight="1"
+            android:text="Mon ,7 jan"
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <TextView
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="JANUARY"
-                    android:textColor="#000" />
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:padding="5dp"
-                android:weightSum="2">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Fri ,11 jan"
-                    android:id="@+id/date"
-                    />
-
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/rupee_icon"
-                        android:text="64.16"
-                        android:id="@+id/rupee"
-                        android:drawablePadding="10dp"
-                        android:drawableEnd="@drawable/backarrow"
-                        android:textColor="#000" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f2f2f2"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:padding="5dp"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Thu ,10 jan"
-
-                        />
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/rupee_icon"
-                            android:text="64.16"
-
-                            android:drawablePadding="10dp"
-                            android:drawableEnd="@drawable/backarrow"
-                            android:textColor="#000" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f2f2f2"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:padding="5dp"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Wed ,9 jan"
-                        />
-
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/rupee_icon"
-                            android:text="64.16"
-                            android:drawablePadding="10dp"
-                            android:drawableEnd="@drawable/backarrow"
-                            android:textColor="#000" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f2f2f2"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:padding="5dp"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Tues ,8 jan"
-
-                        />
-
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/rupee_icon"
-                            android:text="64.16"
-
-                            android:drawablePadding="10dp"
-                            android:drawableEnd="@drawable/backarrow"
-                            android:textColor="#000" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f2f2f2"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:padding="5dp"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Mon ,7 jan"
-
-                        />
-
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/rupee_icon"
-                            android:text="64.16"
-                            android:drawablePadding="10dp"
-                            android:drawableEnd="@drawable/backarrow"
-                            android:textColor="#000" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#f2f2f2"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"/>
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-
+                android:drawableEnd="@drawable/backarrow"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/rupee_icon"
+                android:text="64.16"
+                android:textColor="#000" />
+        </LinearLayout>
 
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:background="#f2f2f2" />
+
 
 </RelativeLayout>

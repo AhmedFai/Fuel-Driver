@@ -10,10 +10,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.user.fueldriver.EarnByDayPOJO.ByDayBean;
+import com.example.user.fueldriver.EarnByDayPOJO.Datum;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class AccountSummary extends AppCompatActivity {
 
@@ -21,13 +32,17 @@ public class AccountSummary extends AppCompatActivity {
 
     RecyclerView grid;
 
-    List<ItemObject>itemObjects;
+    List<Datum> list;
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
+
+    ProgressBar bar;
+
     GridLayoutManager manager;
     SummaryAdapter adapter;
+    TextView date, amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +51,17 @@ public class AccountSummary extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        list = new ArrayList<>();
+        bar = (ProgressBar)findViewById(R.id.progress);
+
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         toolbar.setTitleTextColor(Color.BLACK);
+        date = (TextView)findViewById(R.id.day);
+        amount = (TextView)findViewById(R.id.dayend);
 
         toolbar.setNavigationIcon(R.drawable.arrow);
 
@@ -54,7 +74,7 @@ public class AccountSummary extends AppCompatActivity {
 
         grid = findViewById(R.id.grid);
         manager = new GridLayoutManager(this , 1);
-        adapter = new SummaryAdapter(this);
+        adapter = new SummaryAdapter(this , list);
 
 
         grid.setAdapter(adapter);
@@ -63,7 +83,47 @@ public class AccountSummary extends AppCompatActivity {
 
     }
 
-   /* public class SummaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        bar.setVisibility(View.VISIBLE);
+
+        final Bean b = (Bean) getApplicationContext();
+
+        Retrofit retrofit2 = new Retrofit.Builder()
+                .baseUrl(b.baseURL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        Allapi cr = retrofit2.create(Allapi.class);
+        Call<ByDayBean> call = cr.byDay(b.driverId,getIntent().getStringExtra("day"));
+
+        call.enqueue(new Callback<ByDayBean>() {
+            @Override
+            public void onResponse(Call<ByDayBean> call, Response<ByDayBean> response) {
+                bar.setVisibility(View.GONE);
+                date.setText(response.body().getDay());
+                amount.setText(response.body().getNetEarning());
+
+                adapter.setGridData(response.body().getData());
+
+            }
+
+            @Override
+            public void onFailure(Call<ByDayBean> call, Throwable t) {
+                bar.setVisibility(View.GONE);
+                t.printStackTrace();
+            }
+        });
+
+    }
+
+
+
+
+
+    /* public class SummaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         Context context;
