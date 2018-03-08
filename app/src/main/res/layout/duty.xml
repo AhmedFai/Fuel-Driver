@@ -31,9 +31,11 @@
              android:background="#cdcdcd"/>-->
 
         <LinearLayout
+            android:id="@+id/duty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/off"

@@ -81,7 +81,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * Created by USER on 01-02-2018.
  */
 
-public class Duty extends Fragment implements View.OnClickListener , DirectionFinderListener{
+public class Duty extends Fragment implements View.OnClickListener, DirectionFinderListener {
 
     SupportMapFragment mSupportMapFragment;
     LinearLayout offDuty, onDuty;
@@ -104,11 +104,11 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
     LatLngBounds bounds;
     GoogleMap map;
     Button finish;
+    LinearLayout duty;
 
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
-
 
 
     @Nullable
@@ -129,12 +129,13 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
         onDuty.setOnClickListener(this);
         notiName = (TextView) view.findViewById(R.id.name);
         profile = (ImageView) view.findViewById(R.id.userPic);
-        confirm = (TextView)view.findViewById(R.id.cnfrm);
-        cancle = (TextView)view.findViewById(R.id.cncl);
-        price = (TextView)view.findViewById(R.id.price);
-        quantity = (TextView)view.findViewById(R.id.quantity);
-        type = (TextView)view.findViewById(R.id.type);
-        finish = (Button)view.findViewById(R.id.finish);
+        confirm = (TextView) view.findViewById(R.id.cnfrm);
+        cancle = (TextView) view.findViewById(R.id.cncl);
+        price = (TextView) view.findViewById(R.id.price);
+        quantity = (TextView) view.findViewById(R.id.quantity);
+        type = (TextView) view.findViewById(R.id.type);
+        finish = (Button) view.findViewById(R.id.finish);
+        duty = (LinearLayout) view.findViewById(R.id.duty);
 
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,16 +151,16 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 Allapi cr = retrofit.create(Allapi.class);
-                Call<FinishRideBean> call = cr.finishRide(id,notiId,currentlat,currentLng);
+                Call<FinishRideBean> call = cr.finishRide(id, notiId, currentlat, currentLng);
                 call.enqueue(new Callback<FinishRideBean>() {
                     @Override
                     public void onResponse(Call<FinishRideBean> call, Response<FinishRideBean> response) {
-                        if (Objects.equals(response.body().getStatus(),"1")){
+                        if (Objects.equals(response.body().getStatus(), "1")) {
                             Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             bar.setVisibility(View.GONE);
                             finish.setVisibility(View.GONE);
+                            duty.setVisibility(View.VISIBLE);
                             map.clear();
-                            doSomethingRepeatedly();
 
 
                             EasyLocationMod easyLocationMod = new EasyLocationMod(getContext());
@@ -206,6 +207,11 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
                             map.moveCamera(cameraUpdate);
 
+                            offImage.setBackgroundResource(R.drawable.back_circle);
+                            onImage.setBackgroundResource(R.drawable.redcircle);
+
+
+                            doSomethingRepeatedly();
 
                         }
                     }
@@ -618,7 +624,7 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
 
     }
 
-    public void statusForRide(){
+    public void statusForRide() {
         EasyLocationMod easyLocationMod = new EasyLocationMod(getContext());
 
 
@@ -740,8 +746,8 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
 
         for (Route route : routes) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
-           // time.setText(route.duration.text);
-          //  value.setText(route.distance.text);
+            // time.setText(route.duration.text);
+            //  value.setText(route.distance.text);
 
             Log.d("duration", route.duration.text);
             Log.d("distance", route.distance.text);
@@ -790,10 +796,9 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
         bookingStatus();
 
 
-
     }
 
-    public void bookingStatus(){
+    public void bookingStatus() {
         String id = pref.getString("driverId", "");
 
 
@@ -810,9 +815,14 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
         call.enqueue(new Callback<BookingStatusBean>() {
             @Override
             public void onResponse(Call<BookingStatusBean> call, Response<BookingStatusBean> response) {
-                if (Objects.equals(response.body().getStatus(),"1")){
+                if (Objects.equals(response.body().getData().getStatusCode(), "3")) {
+
+                    duty.setVisibility(View.VISIBLE);
+                    notiBox.setVisibility(View.GONE);
+                    finish.setVisibility(View.GONE);
 
                     if (Objects.equals(response.body().getData().getDutyStatusCode(), "1")) {
+
 
                         Toast.makeText(getContext(), "You are on duty", Toast.LENGTH_SHORT).show();
                         offImage.setBackgroundResource(R.drawable.back_circle);
@@ -830,10 +840,23 @@ public class Duty extends Fragment implements View.OnClickListener , DirectionFi
 
                     }
 
-                }else {
+                } else {
+
+
+                    duty.setVisibility(View.GONE);
+                    notiBox.setVisibility(View.GONE);
+                    finish.setVisibility(View.VISIBLE);
+
+                    notiId = response.body().getData().getBookingId();
+
+                    statusForRide();
+
+
                     Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     bar.setVisibility(View.GONE);
                 }
+
+
             }
 
             @Override

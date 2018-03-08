@@ -8,6 +8,7 @@ import com.example.user.fueldriver.EarnListPOJO.EarnListBean;
 import com.example.user.fueldriver.FinishRidePOJO.FinishRideBean;
 import com.example.user.fueldriver.LoginPOJO.LoginBean;
 import com.example.user.fueldriver.NotificationPOJO.notificationBean;
+import com.example.user.fueldriver.OrderHistoryPOJO.OrderHistoryBean;
 import com.example.user.fueldriver.ProfilePOJO.ProfileBean;
 import com.example.user.fueldriver.RideStatusPOJO.DriverStatusBean;
 import com.example.user.fueldriver.UpdateStatusPOJO.UpdateStatusBean;
@@ -112,6 +113,15 @@ public interface Allapi {
     Call<ByDayBean> byDay(
             @Part("driverId") String m,
             @Part("dayId") String n
+
+    );
+
+
+    @Multipart
+    @POST("fuel/api/driver-order-history.php")
+    Call<OrderHistoryBean> order(
+            @Part("driverId") String m
+
 
     );
 
