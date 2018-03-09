@@ -75,11 +75,17 @@ public class Accounts extends Fragment {
                 @Override
                 public void onResponse(Call<EarnListBean> call, Response<EarnListBean> response) {
 
-                    if (Objects.equals(response.body().getStatus(),"1")){
+                    try{
 
-                        b.dayId = response.body().getData().get(0).getDayId();
-                        adapter.setGridData(response.body().getData());
+                        if (Objects.equals(response.body().getStatus(),"1")){
+
+                            b.dayId = response.body().getData().get(0).getDayId();
+                            adapter.setGridData(response.body().getData());
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
+
 
                 }
 

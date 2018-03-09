@@ -53,7 +53,7 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.MyViewHo
 
         holder.crn.setText(item.getCrn());
         holder.amount.setText(item.getPrice());
-        holder.quantity.setText(item.getQuantity());
+        holder.quantity.setText(item.getQuantity() + " Ltr");
         holder.type.setText(item.getFuelTypeName());
         holder.date.setText(item.getDate());
 

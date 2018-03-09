@@ -574,7 +574,7 @@ public class Duty extends Fragment implements View.OnClickListener, DirectionFin
                                                             String state = listAdresses.get(0).getAdminArea();
                                                             String country = listAdresses.get(0).getCountryName();
                                                             String subLocality = listAdresses.get(0).getSubLocality();
-                                                            pickupLocation.setText(address.toString());
+                                                           // pickupLocation.setText(address.toString());
                                                             Log.d("addre", address.toString());
                                                         }
 
@@ -812,6 +812,7 @@ public class Duty extends Fragment implements View.OnClickListener, DirectionFin
                 .build();
         Allapi cr = retrofit.create(Allapi.class);
         Call<BookingStatusBean> call = cr.booking(id);
+        Log.d("DriverId", id);
         call.enqueue(new Callback<BookingStatusBean>() {
             @Override
             public void onResponse(Call<BookingStatusBean> call, Response<BookingStatusBean> response) {
@@ -824,7 +825,7 @@ public class Duty extends Fragment implements View.OnClickListener, DirectionFin
                     if (Objects.equals(response.body().getData().getDutyStatusCode(), "1")) {
 
 
-                        Toast.makeText(getContext(), "You are on duty", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "You are on duty", Toast.LENGTH_SHORT).show();
                         offImage.setBackgroundResource(R.drawable.back_circle);
                         onImage.setBackgroundResource(R.drawable.redcircle);
                         doSomethingRepeatedly();
@@ -833,7 +834,7 @@ public class Duty extends Fragment implements View.OnClickListener, DirectionFin
 
                     } else {
 
-                        Toast.makeText(getContext(), "Your duty is off", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "Your duty is off", Toast.LENGTH_SHORT).show();
                         offImage.setBackgroundResource(R.drawable.redcircle);
                         onImage.setBackgroundResource(R.drawable.back_circle);
 
