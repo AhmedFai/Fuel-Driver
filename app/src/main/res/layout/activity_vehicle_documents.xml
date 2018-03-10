@@ -28,8 +28,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:textColor="#000"
                 android:text="Vehicle Documents"
+                android:textColor="#000"
                 android:textSize="18sp" />
 
 
@@ -41,6 +41,7 @@
             android:background="#e9e6e6" />
 
         <EditText
+            android:id="@+id/rc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -75,43 +76,49 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-               >
+                android:layout_marginTop="10dp"
+                android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/uploadRC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="18sp"
-                    android:background="@drawable/cdcd"
-                    android:drawableStart="@drawable/cam"
-                    android:drawablePadding="10dp"
-                    android:textSize="12sp"
                     android:layout_gravity="center_vertical"
+                    android:background="@drawable/cdcd"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/cam"
                     android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:paddingStart="18sp"
                     android:text="Upload Document"
-                    android:padding="5dp" />
+                    android:textSize="12sp" />
 
 
             </LinearLayout>
 
 
-
         </LinearLayout>
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:drawableEnd="@drawable/down"
-            android:drawablePadding="10dp"
             android:background="@drawable/cdcdcd_stroke"
-            android:hint="Insurance Company"
-            android:padding="10dp" />
+            android:orientation="horizontal">
 
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="end"
+                android:prompt="@string/class_prompt"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
 
 
         <EditText
@@ -123,6 +130,7 @@
             android:background="@drawable/cdcdcd_stroke"
             android:hint="Insurance No."
             android:padding="10dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -147,42 +155,41 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                >
+                android:layout_marginTop="10dp"
+                android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/uploadInsu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="18sp"
-                    android:background="@drawable/cdcd"
-                    android:drawableStart="@drawable/cam"
-                    android:drawablePadding="10dp"
-                    android:textSize="12sp"
                     android:layout_gravity="center_vertical"
+                    android:background="@drawable/cdcd"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/cam"
                     android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:paddingStart="18sp"
                     android:text="Upload Document"
-                    android:padding="5dp" />
+                    android:textSize="12sp" />
 
 
             </LinearLayout>
-
 
 
         </LinearLayout>
 
 
         <Button
+            android:id="@+id/signin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:text="UPDATE"
-            android:id="@+id/signin"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/red_background"/>
+            android:background="@drawable/red_background"
+            android:text="UPDATE"
+            android:textColor="#fff" />
 
 
     </LinearLayout>

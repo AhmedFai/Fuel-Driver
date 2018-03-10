@@ -2,4 +2,11 @@
     <string name="app_name">FuelDriver</string>
     <string name="fj">AIzaSyD3y-RR7T53RChrulHvhnLLNTGsNkpVX4s</string>
     <string name="tap"><![CDATA[Terms & Condition]]></string>
+
+
+    <string name="class_prompt">Choose a Class</string>
+    <string-array name="ltr_class">
+        <item>Insurance Company</item>
+
+    </string-array>
 </resources>
